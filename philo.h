@@ -10,10 +10,18 @@ typedef struct s_mutex
     pthread_mutex_t mutex;
 }	t_mutex;
 
+typedef enum e_act
+{
+    EAT,
+    SLEEP,
+    THINK,
+}   t_act;
+
 typedef struct s_philo
 {
-    int   		philo_id;
-    pthread_t 	thread_id;
+    unsigned int   		id;
+	pthread_t        	thread;
+	t_act               act;
 }	t_philo;
 
 typedef struct s_environment
@@ -29,13 +37,11 @@ typedef struct s_environment
     bool			is_dead;
 }	t_env;
 
-
 // init.c 4
-t_env			*init_env(char **argv);
-bool		    init_philos(t_env *env);
-bool		    init_forks(t_env *env);
+bool        	init_env(char **argv, t_env *env);
+bool            init_philos(t_env *env);
+bool            init_forks(t_env *env);
 unsigned int	get_time(void);
-
 
 // parse_input.c 3
 bool			parse_argv(t_env *env, char **argv);
