@@ -20,16 +20,21 @@
 
  void	*routine(void *argv)
  {
-	t_env   env;
+	 t_fork	*fork;
 
-	env = *((t_env *)argv);
-	pthread_mutex_lock(&env.forks[env.philos->id]);
-	printf("hi from %u thread\n", env.philos->id);
+	 fork = (t_fork *) argv;
+	pthread_mutex_lock(&fork->mutex);
+	fork->is_loked = true;
+	printf("is loked %d\n", fork->is_loked);
+	printf("hi");
 	usleep(3000);
-	pthread_mutex_unlock(&env.forks[env.philos->id]);
+	pthread_mutex_unlock(&fork->mutex);
+	fork->is_loked = false;
+	printf("is loked %d\n", fork->is_loked);
 // 	printf("eating\n");
 // 	printf("sleeping\n");
 // 	printf("thinking\n");
+	return (NULL);
  }
 
 bool	init_env(char **argv, t_env *env)
@@ -40,8 +45,7 @@ bool	init_env(char **argv, t_env *env)
         exit(1);
     }
     env->philos = malloc(sizeof(t_philo) * env->num_of_philo);
-    env->forks = malloc(sizeof(pthread_mutex_t) * env->num_of_philo);
-    if (env->philos == NULL || env->forks == NULL)
+    if (env->philos == NULL)
     {
 		printf("malloc failed\n");
         exit(1);
@@ -49,7 +53,7 @@ bool	init_env(char **argv, t_env *env)
     env->start_time = get_time();
     env->is_dead = false;
     if (!init_forks(env) || !init_philos(env))
-			return (false);
+		return (false);
     return (true);
 }
 
@@ -61,7 +65,7 @@ bool    init_philos(t_env *env)
 	while (i != env->num_of_philo)
 	{
 		env->philos->id = i;
-		if (pthread_create(&env->philos->thread, NULL, routine, &env))
+		if (pthread_create(&env->philos->thread, NULL, routine, &env->philos[i].fork.mutex))
 			return (false);
 		i++;
 	}
@@ -75,8 +79,9 @@ bool    init_forks(t_env *env)
 	i = 0;
 	while (i != env->num_of_philo)
 	{
-		if (pthread_mutex_init(&env->forks[i], NULL))
+		if (pthread_mutex_init(&env->philos[i].fork.mutex, NULL))
 			return (false);
+		env->philos[i].fork.is_loked = false;
 		i++;
 	}
 	return (true);

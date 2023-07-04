@@ -5,11 +5,6 @@
 # include <pthread.h>
 # include <stdbool.h>
 
-typedef struct s_mutex
-{
-    pthread_mutex_t mutex;
-}	t_mutex;
-
 typedef enum e_act
 {
     EAT,
@@ -17,10 +12,17 @@ typedef enum e_act
     THINK,
 }   t_act;
 
+typedef struct s_fork
+{
+    pthread_mutex_t mutex;
+	bool            is_loked;
+}	t_fork;
+
 typedef struct s_philo
 {
     unsigned int   		id;
 	pthread_t        	thread;
+    t_fork             fork;
 	t_act               act;
 }	t_philo;
 
@@ -33,7 +35,6 @@ typedef struct s_environment
     unsigned int 	num_must_eat;
     unsigned long	start_time;
     t_philo 		*philos;
-    pthread_mutex_t	*forks;
     bool			is_dead;
 }	t_env;
 
