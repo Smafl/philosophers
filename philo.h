@@ -5,27 +5,6 @@
 # include <pthread.h>
 # include <stdbool.h>
 
-typedef enum e_act
-{
-    EAT,
-    SLEEP,
-    THINK,
-}   t_act;
-
-typedef struct s_fork
-{
-    pthread_mutex_t mutex;
-	bool            is_loked;
-}	t_fork;
-
-typedef struct s_philo
-{
-    unsigned int   		id;
-	pthread_t        	thread;
-    t_fork             fork;
-	t_act               act;
-}	t_philo;
-
 typedef struct s_environment
 {
     unsigned int 	num_of_philo;
@@ -34,15 +13,23 @@ typedef struct s_environment
     unsigned int 	time_to_sleep;
     unsigned int 	num_must_eat;
     unsigned long	start_time;
-    t_philo 		*philos;
-    bool			is_dead;
+	bool			is_dead;
 }	t_env;
 
+typedef struct s_philo
+{
+	t_env				*env;
+    unsigned int   		id;
+	pthread_mutex_t 	*r_fork;
+    pthread_mutex_t 	*l_fork;
+}	t_philo;
+
 // init.c 4
-bool        	init_env(char **argv, t_env *env);
-bool            init_philos(t_env *env);
-bool            init_forks(t_env *env);
+bool	init_env(char **argv, t_env *env, t_philo **philos, pthread_mutex_t	**forks);
+bool    init_forks(pthread_mutex_t	**forks, unsigned int num_of_philo);
+void    init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks);
 unsigned int	get_time(void);
+void	log(unsigned int ph_nbr, char *str);
 
 // parse_input.c 3
 bool			parse_argv(t_env *env, char **argv);

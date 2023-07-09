@@ -27,13 +27,11 @@ typedef struct s_mutex
 
 // pthread_create:
 // thread, attributes of the thread, function, arguments for function
-int	main(int argc, char **argv)
+int	main()
 {
 	 pthread_t		thread_1;
 	 pthread_t		thread_2;
 	 t_mutex		mutex;
-	 (void)argc;
-	 (void)argv;
 
 	 pthread_mutex_init(&mutex.mutex, NULL);
 	 pthread_create(&thread_1, NULL, routine, &mutex);
