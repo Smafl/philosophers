@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ekulichk <ekulichk@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/04 15:26:23 by ekulichk          #+#    #+#             */
+/*   Updated: 2023/07/09 19:41:33 by ekulichk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #ifndef PHILO_PHILO_H
 #define PHILO_PHILO_H
@@ -23,15 +35,21 @@ typedef struct s_philo
 	pthread_mutex_t 	*r_fork;
     pthread_mutex_t 	*l_fork;
 }	t_philo;
+//				philo.c
+void			*routine(void *argv);
 
-// init.c 4
-bool	init_env(char **argv, t_env *env, t_philo **philos, pthread_mutex_t	**forks);
-bool    init_forks(pthread_mutex_t	**forks, unsigned int num_of_philo);
-void    init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks);
+// 				init.c 4
+bool			init_env(char **argv, t_env *env, t_philo **philos, pthread_mutex_t	**forks);
+bool    		init_forks(pthread_mutex_t	**forks, unsigned int num_of_philo);
+void    		init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks);
+bool			thread_creation(pthread_t **thread, t_env *env, t_philo *philos);
+
+//				utils.c
 unsigned int	get_time(void);
-void	log(unsigned int ph_nbr, char *str);
+void			print_log(unsigned int ph_nbr, char *str);
+void			print_malloc_failed(void);
 
-// parse_input.c 3
+// 				parse_input.c
 bool			parse_argv(t_env *env, char **argv);
 bool			ph_atoi(const char *str, unsigned int *result);
 

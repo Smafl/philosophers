@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <sys/time.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
@@ -38,10 +37,7 @@ bool    init_forks(pthread_mutex_t	**forks, unsigned int num_of_philo)
 
 	*forks = malloc(sizeof(pthread_mutex_t) * num_of_philo);
 	if (*forks == NULL)
-	{
-		printf("malloc failed\n");
-		exit(1);
-	}
+		print_malloc_failed();
 	i = 0;
 	while (i != num_of_philo)
 	{
@@ -62,10 +58,7 @@ void    init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks)
 
 	*philos = malloc(sizeof(t_philo) * env->num_of_philo);
 	if (*philos == NULL)
-	{
-		printf("malloc failed\n");
-		exit(1);
-	}
+		print_malloc_failed();
 	i = 0;
 	while (i != env->num_of_philo)
 	{
@@ -78,15 +71,23 @@ void    init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks)
 	}
 }
 
-unsigned int	get_time(void)
+bool	thread_creation(pthread_t **thread, t_env *env, t_philo *philos)
 {
-    struct timeval	time_now;
+	int 	i;
 
-    gettimeofday(&time_now, NULL);
-    return (time_now.tv_sec * 1000 + time_now.tv_usec / 1000);
-}
-
-void	log(unsigned int ph_nbr, char *str)
-{
-	printf("%u %u %s\n", get_time(), ph_nbr, str);
+	*thread = malloc(sizeof(pthread_t) * env->num_of_philo);
+	if (*thread == NULL)
+		print_malloc_failed();
+	i = 0;
+	while (i != env->num_of_philo)
+	{
+		if (pthread_create(*thread + i, NULL, &routine, philos + i))
+		{
+			// разделить на чет/нечет
+			// join already inited threads
+			return (printf("thread init failed\n"), false);
+		}
+		i++;
+	}
+	return (true);
 }
