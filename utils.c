@@ -21,3 +21,9 @@ void	print_malloc_failed(void)
 	printf("malloc failed\n");
 	exit(1);
 }
+/*
+ * 100ms time to die
+ * 1000ms time to sleep
+ *
+ *
+ */

@@ -41,15 +41,15 @@
  {
 	t_philo			*philo;
 	unsigned long	last_meal;
-//	unsigned int	eaten;
-
+	unsigned int	eaten;
 
 	philo = argv;
 	last_meal = philo->env->start_time;
-//	eaten = 0;
+	eaten = 0;
 	while (!philo->env->is_dead)
 	{
 		print_log(philo->id, "is thinking");
+
 		pthread_mutex_lock(philo->l_fork);
 		if (get_time() - last_meal > philo->env->time_to_die)
 		{
@@ -72,11 +72,18 @@
 		last_meal = get_time();
 		print_log(philo->id, "is eating");
 		usleep(philo->env->time_to_eat * 1000);
-//		eaten += 1;
+		if (philo->env->num_must_eat != 0)
+		{
+			eaten += 1;
+			if (eaten == philo->env->num_must_eat)
+			{
+				pthread_mutex_unlock(philo->l_fork);
+				pthread_mutex_unlock(philo->r_fork);
+				break ;
+			}
+		}
 		pthread_mutex_unlock(philo->l_fork);
 		pthread_mutex_unlock(philo->r_fork);
-//		if (eaten == philo->env->num_must_eat)
-//			break ;
 		print_log(philo->id, "is sleeping");
 		usleep(philo->env->time_to_sleep * 1000);
 	}

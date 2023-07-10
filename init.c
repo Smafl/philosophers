@@ -65,8 +65,18 @@ void    init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks)
 		ph = *philos + i;
 		ph->id = i + 1;
 		ph->env = env;
-		ph->l_fork = forks + i;
-		ph->r_fork = forks + ((i + 1) % env->num_of_philo);
+		if (i % 2 == 0)
+		{
+			ph->l_fork = forks + i;
+			ph->r_fork = forks + ((i + 1) % env->num_of_philo);
+		}
+		else
+		{
+			ph->r_fork = forks + ((i + 1) % env->num_of_philo);
+			ph->l_fork = forks + i;
+		}
+//		ph->l_fork = forks + i;
+//		ph->r_fork = forks + ((i + 1) % env->num_of_philo);
 		i++;
 	}
 }
