@@ -1,4 +1,5 @@
 
+#include "philo.h"
 #include <stdio.h>
 #include <sys/time.h>
 #include <stdlib.h>
@@ -21,9 +22,19 @@ void	print_malloc_failed(void)
 	printf("malloc failed\n");
 	exit(1);
 }
-/*
- * 100ms time to die
- * 1000ms time to sleep
- *
- *
- */
+
+void	pick_up_fork(t_philo *philo, int nbr)
+{
+	if (nbr == 1)
+	{
+		if (philo->id == philo->env->num_of_philo)
+			pthread_mutex_lock(philo->r_fork);
+		pthread_mutex_lock(philo->l_fork);
+	}
+	else
+	{
+		if (philo->id == philo->env->num_of_philo)
+			pthread_mutex_lock(philo->l_fork);
+		pthread_mutex_lock(philo->r_fork);
+	}
+}

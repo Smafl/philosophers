@@ -44,10 +44,16 @@ bool    		init_forks(pthread_mutex_t	**forks, unsigned int num_of_philo);
 void    		init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks);
 bool			thread_creation(pthread_t **thread, t_env *env, t_philo *philos);
 
+//				activity.c
+int 			thinking(t_philo *philo, unsigned long last_meal);
+int 			eating(t_philo *philo, unsigned int *num_of_meals);
+int				sleeping(t_philo *philo, unsigned long last_meal);
+
 //				utils.c
 unsigned int	get_time(void);
 void			print_log(unsigned int ph_nbr, char *str);
 void			print_malloc_failed(void);
+void			pick_up_fork(t_philo *philo, int nbr);
 
 // 				parse_input.c
 bool			parse_argv(t_env *env, char **argv);

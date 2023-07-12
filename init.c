@@ -65,18 +65,8 @@ void    init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks)
 		ph = *philos + i;
 		ph->id = i + 1;
 		ph->env = env;
-		if (i % 2 == 0)
-		{
-			ph->l_fork = forks + i;
-			ph->r_fork = forks + ((i + 1) % env->num_of_philo);
-		}
-		else
-		{
-			ph->r_fork = forks + ((i + 1) % env->num_of_philo);
-			ph->l_fork = forks + i;
-		}
-//		ph->l_fork = forks + i;
-//		ph->r_fork = forks + ((i + 1) % env->num_of_philo);
+		ph->l_fork = forks + i;
+		ph->r_fork = forks + ((i + 1) % env->num_of_philo);
 		i++;
 	}
 }
@@ -93,7 +83,6 @@ bool	thread_creation(pthread_t **thread, t_env *env, t_philo *philos)
 	{
 		if (pthread_create(*thread + i, NULL, &routine, philos + i))
 		{
-			// разделить на чет/нечет
 			// join already inited threads
 			return (printf("thread init failed\n"), false);
 		}
