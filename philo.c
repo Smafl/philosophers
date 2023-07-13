@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:31:39 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/04 17:41:25 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/13 14:58:19 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,27 @@
 	return (NULL);
  }
 
+void	free_all(t_philo **philos, pthread_t **threads, pthread_mutex_t	**forks)
+{
+	int i;
+
+	i = 0;
+	while (i != (*philos)->env->num_of_philo)
+	{
+		pthread_mutex_destroy(*forks + i);
+		i++;
+	}
+	free(forks);
+	i = 0;
+	while (i != (*philos)->env->num_of_philo)
+	{
+		pthread_join(*threads[i], NULL);
+		i++;
+	}
+	free(threads);
+	free(philos);
+}
+
 // pthread_create:
 // thread, attributes of the thread, function, arguments for function
 int	main(int argc, char **argv)
@@ -46,19 +67,14 @@ int	main(int argc, char **argv)
     t_env			env;
 	t_philo			*philos;
 	pthread_mutex_t	*forks;
-	pthread_t		*thread;
+	pthread_t		*threads;
 
     if (argc < 5 || argc > 6)
         return (printf("incorrect input\n"), 1);
     if (!init_env(argv, &env, &philos, &forks))
 		return (printf("mutex init failed\n"), 1);
-	if (!thread_creation(&thread, &env, philos))
+	if (!thread_creation(&threads, &env, philos))
 		return (printf("thread init failed\n"), 1);
-	i = 0;
-	while (i != env.num_of_philo)
-	{
-		pthread_join(thread[i], NULL);
-		i++;
-	}
+	free_all(&philos, &threads, &forks);
     return (0);
 }
