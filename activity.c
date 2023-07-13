@@ -6,22 +6,22 @@
 
 int thinking(t_philo *philo, unsigned long last_meal)
 {
-	print_log(philo->id, "is thinking");
+	print_log(get_time() - philo->env->start_time, philo->id, "is thinking");
 	while (1)
 	{
 		pick_up_fork(philo, 1);
 		if (get_time() - last_meal > philo->env->time_to_die)
 		{
-			print_log(philo->id, "died");
+			print_log(get_time() - philo->env->start_time, philo->id, "died");
 			pthread_mutex_unlock(philo->l_fork);
 			philo->env->is_dead = true;
 			return (EXIT_FAILURE);
 		}
-		print_log(philo->id, "has taken a fork");
+		print_log(get_time() - philo->env->start_time, philo->id, "has taken a fork");
 		pick_up_fork(philo, 2);
 		if (get_time() - last_meal > philo->env->time_to_die)
 		{
-			print_log(philo->id, "died");
+			print_log(get_time() - philo->env->start_time, philo->id, "died");
 			pthread_mutex_unlock(philo->r_fork);
 			pthread_mutex_unlock(philo->l_fork);
 			philo->env->is_dead = true;
@@ -29,7 +29,7 @@ int thinking(t_philo *philo, unsigned long last_meal)
 		}
 		else
 		{
-			print_log(philo->id, "has taken a fork");
+			print_log(get_time() - philo->env->start_time, philo->id, "has taken a fork");
 			break ;
 		}
 	}
@@ -38,7 +38,7 @@ int thinking(t_philo *philo, unsigned long last_meal)
 
 int eating(t_philo *philo, unsigned int *num_of_meals)
 {
-	print_log(philo->id, "is eating");
+	print_log(get_time() - philo->env->start_time, philo->id, "is eating");
 	usleep(philo->env->time_to_eat * 1000);
 	if (philo->env->num_must_eat != 0)
 	{
@@ -59,7 +59,7 @@ int sleeping(t_philo *philo, unsigned long last_meal)
 {
 	unsigned long	sleeping;
 
-	print_log(philo->id, "is sleeping");
+	print_log(get_time() - philo->env->start_time, philo->id, "is sleeping");
 	sleeping = 0;
 	while (sleeping < philo->env->time_to_sleep)
 	{
@@ -67,9 +67,10 @@ int sleeping(t_philo *philo, unsigned long last_meal)
 		sleeping += 1;
 		if (get_time() - last_meal > philo->env->time_to_die)
 		{
-			print_log(philo->id, "died");
+			print_log(get_time() - philo->env->start_time, philo->id, "died");
 			philo->env->is_dead = true;
 			exit(1);
 		}
 	}
+	return (EXIT_SUCCESS);
 }

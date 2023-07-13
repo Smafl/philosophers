@@ -51,7 +51,7 @@ int				sleeping(t_philo *philo, unsigned long last_meal);
 
 //				utils.c
 unsigned int	get_time(void);
-void			print_log(unsigned int ph_nbr, char *str);
+void			print_log(unsigned int time, unsigned int ph_nbr, char *str);
 void			print_malloc_failed(void);
 void			pick_up_fork(t_philo *philo, int nbr);
 

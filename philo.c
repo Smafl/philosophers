@@ -40,7 +40,7 @@
 
 void	free_all(t_philo **philos, pthread_t **threads, pthread_mutex_t	**forks)
 {
-	int i;
+	unsigned int i;
 
 	i = 0;
 	while (i != (*philos)->env->num_of_philo)
@@ -48,22 +48,21 @@ void	free_all(t_philo **philos, pthread_t **threads, pthread_mutex_t	**forks)
 		pthread_mutex_destroy(*forks + i);
 		i++;
 	}
-	free(forks);
+//	free(forks);
 	i = 0;
 	while (i != (*philos)->env->num_of_philo)
 	{
 		pthread_join(*threads[i], NULL);
 		i++;
 	}
-	free(threads);
-	free(philos);
+//	free(threads);
+//	free(philos);
 }
 
 // pthread_create:
 // thread, attributes of the thread, function, arguments for function
 int	main(int argc, char **argv)
 {
-	int 			i;
     t_env			env;
 	t_philo			*philos;
 	pthread_mutex_t	*forks;

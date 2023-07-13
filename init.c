@@ -73,7 +73,7 @@ void    init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks)
 
 bool	thread_creation(pthread_t **thread, t_env *env, t_philo *philos)
 {
-	int 	i;
+	unsigned int 	i;
 
 	*thread = malloc(sizeof(pthread_t) * env->num_of_philo);
 	if (*thread == NULL)
