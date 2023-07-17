@@ -46,6 +46,7 @@ bool    init_forks(pthread_mutex_t	**forks, unsigned int num_of_philo)
 			// destroy already inited mutexes
 			return (false);
 		}
+		printf("create fork: %p\n", *forks + i);
 		i++;
 	}
 	return (true);
@@ -66,7 +67,9 @@ void    init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks)
 		ph->id = i + 1;
 		ph->env = env;
 		ph->l_fork = forks + i;
+		printf("[id %d] l_fork %p\n", ph->id, ph->l_fork);
 		ph->r_fork = forks + ((i + 1) % env->num_of_philo);
+		printf("[id %d] r_fork %p\n", ph->id, ph->r_fork);
 		i++;
 	}
 }

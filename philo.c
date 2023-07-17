@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <unistd.h>
 
  void	*routine(void *argv)
  {
@@ -24,17 +25,61 @@
 	philo = argv;
 	last_meal = philo->env->start_time;
 	num_of_meals = 0;
-	while (!philo->env->is_dead)
-	{
-		// change exit!
-		if (thinking(philo, last_meal))
-			exit(1);
-		if (eating(philo, &num_of_meals))
-			exit(1);
-		last_meal = get_time();
-		if (sleeping(philo, last_meal))
-			exit(1);
-	}
+	 while (!philo->env->is_dead)
+	 {
+		 print_log(get_time() - philo->env->start_time, philo->id, "\033[0;34mis thinking\033[0m");
+		 pthread_mutex_lock(philo->l_fork);
+		 if (get_time() - last_meal > philo->env->time_to_die)
+		 {
+			 print_log(get_time() - philo->env->start_time, philo->id, "\033[0;31mdied\033[0m");
+			 pthread_mutex_unlock(philo->l_fork);
+			 philo->env->is_dead = true;
+			 exit (1);
+		 }
+//		 print_log(get_time() - philo->env->start_time, philo->id, "has taken a fork");
+		 printf("[id %d] taken fork: %p\n", philo->id, philo->l_fork);
+		 pthread_mutex_lock(philo->r_fork);
+		 if (get_time() - last_meal > philo->env->time_to_die)
+		 {
+			 print_log(get_time() - philo->env->start_time, philo->id, "\033[0;31mdied\033[0m");
+			 pthread_mutex_unlock(philo->r_fork);
+			 pthread_mutex_unlock(philo->l_fork);
+			 philo->env->is_dead = true;
+			 exit (1);
+		 }
+//		 print_log(get_time() - philo->env->start_time, philo->id, "has taken a fork");
+		 printf("[id %d] taken fork: %p\n", philo->id, philo->r_fork);
+		 last_meal = get_time();
+		 print_log(get_time() - philo->env->start_time, philo->id, "\033[0;32mis eating\033[0m");
+		 usleep(philo->env->time_to_eat * 1000);
+		 if (philo->env->num_must_eat != 0)
+		 {
+			 num_of_meals += 1;
+			 if (num_of_meals == philo->env->num_must_eat)
+			 {
+				 pthread_mutex_unlock(philo->l_fork);
+				 pthread_mutex_unlock(philo->r_fork);
+				 break ;
+			 }
+		 }
+		 pthread_mutex_unlock(philo->l_fork);
+		 printf("[id %d] release fork: %p\n", philo->id, philo->r_fork);
+		 pthread_mutex_unlock(philo->r_fork);
+		 printf("[id %d] release fork: %p\n", philo->id, philo->r_fork);
+		 print_log(get_time() - philo->env->start_time, philo->id, "\033[30;1mis sleeping\033[0m");
+		 usleep(philo->env->time_to_sleep * 1000);
+	 }
+//	while (!philo->env->is_dead)
+//	{
+//		// change exit!
+//		if (thinking(philo, last_meal))
+//			exit(1);
+//		if (eating(philo, &num_of_meals))
+//			exit(1);
+//		last_meal = get_time();
+//		if (sleeping(philo, last_meal))
+//			exit(1);
+//	}
 	return (NULL);
  }
 
