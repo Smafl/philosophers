@@ -36,8 +36,7 @@
 			 philo->env->is_dead = true;
 			 exit (1);
 		 }
-//		 print_log(get_time() - philo->env->start_time, philo->id, "has taken a fork");
-		 printf("[id %d] taken fork: %p\n", philo->id, philo->l_fork);
+		 print_log(get_time() - philo->env->start_time, philo->id, "has taken a fork");
 		 pthread_mutex_lock(philo->r_fork);
 		 if (get_time() - last_meal > philo->env->time_to_die)
 		 {
@@ -47,8 +46,7 @@
 			 philo->env->is_dead = true;
 			 exit (1);
 		 }
-//		 print_log(get_time() - philo->env->start_time, philo->id, "has taken a fork");
-		 printf("[id %d] taken fork: %p\n", philo->id, philo->r_fork);
+		 print_log(get_time() - philo->env->start_time, philo->id, "has taken a fork");
 		 last_meal = get_time();
 		 print_log(get_time() - philo->env->start_time, philo->id, "\033[0;32mis eating\033[0m");
 		 usleep(philo->env->time_to_eat * 1000);
@@ -63,9 +61,9 @@
 			 }
 		 }
 		 pthread_mutex_unlock(philo->l_fork);
-		 printf("[id %d] release fork: %p\n", philo->id, philo->r_fork);
+//		 printf("[id %d] release fork: %p\n", philo->id, philo->r_fork);
 		 pthread_mutex_unlock(philo->r_fork);
-		 printf("[id %d] release fork: %p\n", philo->id, philo->r_fork);
+//		 printf("[id %d] release fork: %p\n", philo->id, philo->r_fork);
 		 print_log(get_time() - philo->env->start_time, philo->id, "\033[30;1mis sleeping\033[0m");
 		 usleep(philo->env->time_to_sleep * 1000);
 	 }
@@ -90,18 +88,15 @@ void	free_all(t_philo **philos, pthread_t **threads, pthread_mutex_t	**forks)
 	i = 0;
 	while (i != (*philos)->env->num_of_philo)
 	{
-		pthread_mutex_destroy(*forks + i);
-		i++;
-	}
-//	free(forks);
-	i = 0;
-	while (i != (*philos)->env->num_of_philo)
-	{
 		pthread_join(*threads[i], NULL);
 		i++;
 	}
-//	free(threads);
-//	free(philos);
+	i = 0;
+	while (i != (*philos)->env->num_of_philo)
+	{
+		pthread_mutex_destroy(*forks + i);
+		i++;
+	}
 }
 
 // pthread_create:
