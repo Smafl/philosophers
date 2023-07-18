@@ -25,6 +25,8 @@ bool	init_env(char **argv, t_env *env, t_philo **philos, pthread_mutex_t	**forks
     }
     env->start_time = get_time();
 	env->is_dead = false;
+//	if (pthread_mutex_init(&env->print_log_mutex, NULL))
+//		return (false);
     if (!init_forks(forks, env->num_of_philo))
 		return (false);
 	init_philos(philos, env, *forks);
@@ -43,6 +45,7 @@ bool    init_forks(pthread_mutex_t	**forks, unsigned int num_of_philo)
 	{
 		if (pthread_mutex_init(*forks + i, NULL))
 		{
+			// todo
 			// destroy already inited mutexes
 			return (false);
 		}
@@ -63,6 +66,7 @@ void    init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks)
 	while (i != env->num_of_philo)
 	{
 		ph = *philos + i;
+//		printf("ph address %p\n", ph);
 		ph->id = i + 1;
 		ph->env = env;
 		ph->l_fork = forks + i;
@@ -83,7 +87,8 @@ bool	thread_creation(pthread_t **thread, t_env *env, t_philo *philos)
 	{
 		if (pthread_create(*thread + i, NULL, &routine, philos + i))
 		{
-			// join already inited threads
+			// todo
+			// join already inited threads and mutexes
 			return (printf("thread init failed\n"), false);
 		}
 		i++;
