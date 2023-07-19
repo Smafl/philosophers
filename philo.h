@@ -26,7 +26,7 @@ typedef struct s_environment
     unsigned int 	num_must_eat;
     unsigned long	start_time;
 	bool			is_dead;
-//	pthread_mutex_t	print_log_mutex;
+	pthread_mutex_t	print;
 }	t_env;
 
 typedef struct s_philo
@@ -52,7 +52,7 @@ int				sleeping(t_philo *philo, unsigned long last_meal);
 
 //				utils.c
 unsigned int	get_time(void);
-void			print_log(unsigned int time, unsigned int ph_nbr, char *str);
+void			print_log(unsigned int time, t_philo *philo, char *str);
 void			print_malloc_failed(void);
 
 // 				parse_input.c

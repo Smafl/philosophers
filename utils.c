@@ -12,9 +12,11 @@ unsigned int	get_time(void)
 	return (time_now.tv_sec * 1000 + time_now.tv_usec / 1000);
 }
 
-void	print_log(unsigned int time, unsigned int ph_nbr, char *str)
+void	print_log(unsigned int time, t_philo *philo, char *str)
 {
-	printf("%u %u %s\n", time, ph_nbr, str);
+	pthread_mutex_lock(&philo->env->print);
+	printf("%u %u %s\n", time, philo->id, str);
+	pthread_mutex_unlock(&philo->env->print);
 }
 
 void	print_malloc_failed(void)

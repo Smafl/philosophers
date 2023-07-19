@@ -50,7 +50,7 @@ int	main(int argc, char **argv)
     if (argc < 5 || argc > 6)
         return (printf("incorrect input\n"), 1);
     if (!init_env(argv, &env, &philos, &forks))
-		return (printf("mutex init failed\n"), 1);
+		return (1);
 	if (!thread_creation(&threads, &env, philos))
 	{
 //		free_philos(&philos);

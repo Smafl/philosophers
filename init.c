@@ -21,14 +21,20 @@ bool	init_env(char **argv, t_env *env, t_philo **philos, pthread_mutex_t	**forks
 	if (!parse_argv(env, argv))
 	{
 		printf("incorrect input\n");
-        exit(1);
+		return (false);
     }
     env->start_time = get_time();
 	env->is_dead = false;
-//	if (pthread_mutex_init(&env->print_log_mutex, NULL))
-//		return (false);
-    if (!init_forks(forks, env->num_of_philo))
+	if (pthread_mutex_init(&env->print, NULL))
+	{
+		printf("mutex init failed\n");
 		return (false);
+	}
+    if (!init_forks(forks, env->num_of_philo))
+	{
+		printf("mutex init failed\n");
+		return (false);
+	}
 	init_philos(philos, env, *forks);
     return (true);
 }
