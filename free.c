@@ -27,6 +27,7 @@ void	destroy_mutexes(t_philo *philos, pthread_mutex_t *forks)
 		i++;
 	}
 	pthread_mutex_destroy(&philos->env->print);
+	pthread_mutex_destroy(&philos->env->dead);
 }
 
 void	free_philos(t_philo **philos)

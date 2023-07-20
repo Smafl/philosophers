@@ -12,7 +12,7 @@ void    unlock_fork(t_fork *fork)
 
 bool    take_fork(t_fork *fork, unsigned int time_out)
 {
-	while (get_time() < time_out)
+	while (get_time() <= time_out)
 	{
 		if (!fork->taken)
 		{
@@ -65,28 +65,41 @@ int eating(t_philo *philo, unsigned int *num_of_meals)
 	return (EXIT_SUCCESS);
 }
 
+// todo
+// doesn't work case ./philo 4 410 200 200 -- nobody should die
 int sleeping(t_philo *philo, unsigned long last_meal)
 {
-	unsigned long	sleeping_time;
+//	unsigned long	sleeping_time;
 	unsigned long   slept;
 
 	(void)last_meal;
 	slept = 0;
-	if (philo->env->time_to_sleep + philo->env->time_to_eat < philo->env->time_to_die)
-		sleeping_time = philo->env->time_to_sleep;
-	else
-		sleeping_time = philo->env->time_to_die - philo->env->time_to_eat;
+//	if (philo->env->time_to_sleep + philo->env->time_to_eat < philo->env->time_to_die)
+//		sleeping_time = philo->env->time_to_sleep;
+//	else
+//		sleeping_time = philo->env->time_to_die - philo->env->time_to_eat;
 	print_log(get_time() - philo->env->start_time, philo, "\033[30;1mis sleeping\033[0m");
-	while (!philo->env->is_dead && slept != sleeping_time)
+//	while (!philo->env->is_dead && (slept + last_meal < philo->env->time_to_die) && (slept < philo->env->time_to_sleep))
+	while (slept < philo->env->time_to_sleep)
 	{
+//		printf("slept+last meal %lu\n", get_time() - last_meal);
+//		printf("time to die %u\n", philo->env->time_to_die);
+		if (get_time() - last_meal > philo->env->time_to_die)
+		{
+			print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied sleep\033[0m");
+			philo->env->is_dead = true;
+			return (EXIT_FAILURE);
+		}
+		if (philo->env->is_dead)
+			return (EXIT_FAILURE);
 		usleep(1000);
 		slept++;
 	}
-	if (sleeping_time > philo->env->time_to_sleep + philo->env->time_to_eat)
-	{
-		print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied sleep\033[0m");
-		philo->env->is_dead = true;
-		return (EXIT_FAILURE);
-	}
+//	if (sleeping_time > philo->env->time_to_sleep + philo->env->time_to_eat)
+//	{
+//		print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied sleep\033[0m");
+//		philo->env->is_dead = true;
+//		return (EXIT_FAILURE);
+//	}
 	return (EXIT_SUCCESS);
 }

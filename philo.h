@@ -34,6 +34,7 @@ typedef struct s_environment
     unsigned long	start_time;
 	bool			is_dead;
 	pthread_mutex_t	print;
+	pthread_mutex_t	dead;
 }	t_env;
 
 typedef struct s_philo

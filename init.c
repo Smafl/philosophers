@@ -30,6 +30,11 @@ bool	init_env(char **argv, t_env *env, t_philo **philos, t_fork	**forks)
 		printf("mutex init failed\n");
 		return (false);
 	}
+	if (pthread_mutex_init(&env->dead, NULL))
+	{
+		printf("mutex init failed\n");
+		return (false);
+	}
     if (!init_forks(forks, env->num_of_philo))
 	{
 		printf("mutex init failed\n");
