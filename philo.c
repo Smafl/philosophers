@@ -29,9 +29,9 @@ void	*routine(void *argv)
 	 {
 		if (thinking(philo, last_meal))
 			break;
+		last_meal = get_time();
 		if (eating(philo, &num_of_meals))
 			break;
-		last_meal = get_time();
 		if (sleeping(philo, last_meal))
 			break;
 	 }
@@ -43,8 +43,8 @@ void	*routine(void *argv)
 int	main(int argc, char **argv)
 {
     t_env			env;
+	t_fork          *forks;
 	t_philo			*philos;
-	pthread_mutex_t	*forks;
 	pthread_t		*threads;
 
     if (argc < 5 || argc > 6)
@@ -58,6 +58,6 @@ int	main(int argc, char **argv)
 	}
 //	free_all(&philos, threads, forks);
 	join_threads(philos, threads);
-	destroy_mutexes(philos, forks);
+//	destroy_mutexes(philos, forks);
 	return (0);
 }

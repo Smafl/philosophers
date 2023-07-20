@@ -16,7 +16,7 @@
 #include <pthread.h>
 #include <stdbool.h>
 
-bool	init_env(char **argv, t_env *env, t_philo **philos, pthread_mutex_t	**forks)
+bool	init_env(char **argv, t_env *env, t_philo **philos, t_fork	**forks)
 {
 	if (!parse_argv(env, argv))
 	{
@@ -39,28 +39,29 @@ bool	init_env(char **argv, t_env *env, t_philo **philos, pthread_mutex_t	**forks
     return (true);
 }
 
-bool    init_forks(pthread_mutex_t	**forks, unsigned int num_of_philo)
+bool    init_forks(t_fork **forks, unsigned int num_of_philo)
 {
 	unsigned int i;
 
-	*forks = malloc(sizeof(pthread_mutex_t) * num_of_philo);
+	*forks = malloc(sizeof(t_fork) * num_of_philo);
 	if (*forks == NULL)
 		print_malloc_failed();
 	i = 0;
 	while (i != num_of_philo)
 	{
-		if (pthread_mutex_init(*forks + i, NULL))
+		if (pthread_mutex_init(&(*forks + i)->mutex, NULL))
 		{
 			// todo
 			// destroy already inited mutexes
 			return (false);
 		}
+		(*forks + i)->taken = false;
 		i++;
 	}
 	return (true);
 }
 
-void    init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks)
+void    init_philos(t_philo **philos, t_env *env, t_fork *forks)
 {
 	unsigned int i;
 	t_philo *ph;

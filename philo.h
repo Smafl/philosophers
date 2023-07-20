@@ -17,8 +17,15 @@
 # include <pthread.h>
 # include <stdbool.h>
 
+typedef struct s_fork
+{
+	pthread_mutex_t mutex;
+	bool            taken;
+}   t_fork;
+
 typedef struct s_environment
 {
+	// todo signed int
     unsigned int 	num_of_philo;
     unsigned int 	time_to_die;
     unsigned int 	time_to_eat;
@@ -31,18 +38,18 @@ typedef struct s_environment
 
 typedef struct s_philo
 {
-	t_env				*env;
-    unsigned int   		id;
-	pthread_mutex_t 	*r_fork;
-    pthread_mutex_t 	*l_fork;
+	t_env			*env;
+    unsigned int    id;
+	t_fork       	*r_fork;
+    t_fork       	*l_fork;
 }	t_philo;
 //				philo.c
 void			*routine(void *argv);
 
 // 				init.c 4
-bool			init_env(char **argv, t_env *env, t_philo **philos, pthread_mutex_t	**forks);
-bool    		init_forks(pthread_mutex_t	**forks, unsigned int num_of_philo);
-void    		init_philos(t_philo **philos, t_env *env, pthread_mutex_t *forks);
+bool			init_env(char **argv, t_env *env, t_philo **philos, t_fork **forks);
+bool    		init_forks(t_fork **forks, unsigned int num_of_philo);
+void    		init_philos(t_philo **philos, t_env *env, t_fork *forks);
 bool			thread_creation(pthread_t **thread, t_env *env, t_philo *philos);
 
 //				activity.c
