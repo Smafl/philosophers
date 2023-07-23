@@ -17,6 +17,13 @@
 # include <pthread.h>
 # include <stdbool.h>
 
+typedef enum e_activity
+{
+	THINK,
+	EAT,
+	SLEEP,
+}   t_activity;
+
 typedef struct s_fork
 {
 	pthread_mutex_t mutex;
@@ -40,10 +47,13 @@ typedef struct s_environment
 typedef struct s_philo
 {
 	t_env			*env;
-    unsigned int    id;
+	unsigned int    id;
 	t_fork       	*r_fork;
     t_fork       	*l_fork;
+	t_activity      activity;
+	unsigned int    activity_start;
 }	t_philo;
+
 //				philo.c
 void			*routine(void *argv);
 
@@ -55,7 +65,7 @@ bool			thread_creation(pthread_t **thread, t_env *env, t_philo *philos);
 
 //				activity.c
 int 			thinking(t_philo *philo, unsigned long last_meal);
-int 			eating(t_philo *philo, unsigned int *num_of_meals);
+int 			eating(t_philo *philo, unsigned int *num_of_meals, unsigned long *last_meal);
 int				sleeping(t_philo *philo, unsigned long last_meal);
 
 //				utils.c

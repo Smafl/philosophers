@@ -16,6 +16,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+int should_thread_terminate(t_philo *philo)
+{
+	int should_terminate;
+
+	pthread_mutex_lock(&philo->env->dead);
+	should_terminate = philo->env->is_dead;
+	pthread_mutex_unlock(&philo->env->dead);
+
+	return (should_terminate);
+}
+
 void	*routine(void *argv)
 {
 	t_philo			*philo;
@@ -23,18 +34,22 @@ void	*routine(void *argv)
 	unsigned int	num_of_meals;
 
 	philo = argv;
+	if (philo->id % 2 == 1)
+		usleep(100);
 	last_meal = philo->env->start_time;
 	num_of_meals = 0;
-	 while (!philo->env->is_dead)
-	 {
+	while (1)
+	{
+		if (should_thread_terminate(philo))
+			break ;
 		if (thinking(philo, last_meal))
-			break;
-		last_meal = get_time();
-		if (eating(philo, &num_of_meals))
-			break;
+			break ;
+		if (eating(philo, &num_of_meals, &last_meal))
+			break ;
 		if (sleeping(philo, last_meal))
-			break;
-	 }
+			break ;
+		usleep(1000);
+	}
 	return (NULL);
 }
 

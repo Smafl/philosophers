@@ -6,6 +6,7 @@
 
 void    unlock_fork(t_fork *fork)
 {
+	pthread_mutex_lock(&fork->mutex);
 	fork->taken = false;
 	pthread_mutex_unlock(&fork->mutex);
 }
@@ -18,9 +19,10 @@ bool    take_fork(t_fork *fork, unsigned int time_out)
 		{
 			pthread_mutex_lock(&fork->mutex);
 			fork->taken = true;
+			pthread_mutex_unlock(&fork->mutex);
 			return (true);
 		}
-		usleep(1000);
+		usleep(200);
 	}
 	return (false);
 }
@@ -31,24 +33,53 @@ int thinking(t_philo *philo, unsigned long last_meal)
 	if (!take_fork(philo->l_fork, last_meal + philo->env->time_to_die))
 	{
 		print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied think 1\033[0m");
+		pthread_mutex_lock(&philo->env->dead);
 		philo->env->is_dead = true;
+		pthread_mutex_unlock(&philo->env->dead);
 		return (EXIT_FAILURE);
 	}
-	print_log(get_time() - philo->env->start_time, philo, "has taken a fork");
+	print_log(get_time() - philo->env->start_time, philo, "has taken a left fork");
 	if (!take_fork(philo->r_fork, last_meal + philo->env->time_to_die))
 	{
 		print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied think 2\033[0m");
-		unlock_fork(philo->l_fork);
+		pthread_mutex_lock(&philo->env->dead);
 		philo->env->is_dead = true;
+		pthread_mutex_unlock(&philo->env->dead);
+		unlock_fork(philo->l_fork);
 		return (EXIT_FAILURE);
 	}
-	print_log(get_time() - philo->env->start_time, philo, "has taken a fork");
+	print_log(get_time() - philo->env->start_time, philo, "has taken a right fork");
 	return  (EXIT_SUCCESS);
 }
 
-int eating(t_philo *philo, unsigned int *num_of_meals)
+int sleeping_2(t_philo *philo, unsigned long last_meal)
 {
-	print_log(get_time() - philo->env->start_time, philo, "\033[0;32mis eating\033[0m");
+	unsigned long	sleep_start;
+
+	(void)last_meal;
+	sleep_start = get_time();
+	while ((get_time() - sleep_start < philo->env->time_to_eat) && !philo->env->is_dead)
+	{
+//		if (get_time() - sleep_start >= philo->env->time_to_die)
+//		{
+//			print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied sleep\033[0m");
+//			pthread_mutex_lock(&philo->env->dead);
+//			philo->env->is_dead = true;
+//			pthread_mutex_unlock(&philo->env->dead);
+//			return (EXIT_FAILURE);
+//		}
+		if (philo->env->is_dead)
+			return (EXIT_FAILURE);
+		usleep(200);
+	}
+	return (EXIT_SUCCESS);
+}
+
+int eating(t_philo *philo, unsigned int *num_of_meals, unsigned long *last_meal)
+{
+	*last_meal = get_time();
+//	print_log(get_time() - philo->env->start_time, philo, "\033[0;32mis eating\033[0m");
+	sleeping_2(philo, *last_meal);
 	usleep(philo->env->time_to_eat * 1000);
 	if (philo->env->num_must_eat != 0)
 	{
@@ -67,39 +98,27 @@ int eating(t_philo *philo, unsigned int *num_of_meals)
 
 // todo
 // doesn't work case ./philo 4 410 200 200 -- nobody should die
+
 int sleeping(t_philo *philo, unsigned long last_meal)
 {
-//	unsigned long	sleeping_time;
-	unsigned long   slept;
+	unsigned long	sleep_start;
 
 	(void)last_meal;
-	slept = 0;
-//	if (philo->env->time_to_sleep + philo->env->time_to_eat < philo->env->time_to_die)
-//		sleeping_time = philo->env->time_to_sleep;
-//	else
-//		sleeping_time = philo->env->time_to_die - philo->env->time_to_eat;
+	sleep_start = get_time();
 	print_log(get_time() - philo->env->start_time, philo, "\033[30;1mis sleeping\033[0m");
-//	while (!philo->env->is_dead && (slept + last_meal < philo->env->time_to_die) && (slept < philo->env->time_to_sleep))
-	while (slept < philo->env->time_to_sleep)
+	while ((get_time() - sleep_start < philo->env->time_to_sleep) && !philo->env->is_dead)
 	{
-//		printf("slept+last meal %lu\n", get_time() - last_meal);
-//		printf("time to die %u\n", philo->env->time_to_die);
-		if (get_time() - last_meal > philo->env->time_to_die)
+		if (get_time() - sleep_start >= philo->env->time_to_die)
 		{
 			print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied sleep\033[0m");
+			pthread_mutex_lock(&philo->env->dead);
 			philo->env->is_dead = true;
+			pthread_mutex_unlock(&philo->env->dead);
 			return (EXIT_FAILURE);
 		}
 		if (philo->env->is_dead)
 			return (EXIT_FAILURE);
-		usleep(1000);
-		slept++;
+		usleep(200);
 	}
-//	if (sleeping_time > philo->env->time_to_sleep + philo->env->time_to_eat)
-//	{
-//		print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied sleep\033[0m");
-//		philo->env->is_dead = true;
-//		return (EXIT_FAILURE);
-//	}
 	return (EXIT_SUCCESS);
 }

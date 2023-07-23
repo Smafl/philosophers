@@ -6,12 +6,14 @@
 
 void	print_log(unsigned int time, t_philo *philo, char *str)
 {
+	pthread_mutex_lock(&philo->env->dead);
 	if (!philo->env->is_dead)
 	{
 		pthread_mutex_lock(&philo->env->print);
 		printf("%u %u %s\n", time, philo->id, str);
 		pthread_mutex_unlock(&philo->env->print);
 	}
+	pthread_mutex_unlock(&philo->env->dead);
 }
 
 unsigned int	get_time(void)
