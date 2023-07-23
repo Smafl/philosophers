@@ -23,7 +23,6 @@ int should_thread_terminate(t_philo *philo)
 	pthread_mutex_lock(&philo->env->dead);
 	should_terminate = philo->env->is_dead;
 	pthread_mutex_unlock(&philo->env->dead);
-
 	return (should_terminate);
 }
 
@@ -34,21 +33,27 @@ void	*routine(void *argv)
 	unsigned int	num_of_meals;
 
 	philo = argv;
-	if (philo->id % 2 == 1)
-		usleep(100);
+//	if (philo->id % 2 == 1)
+//		usleep(100);
 	last_meal = philo->env->start_time;
 	num_of_meals = 0;
-	while (1)
+	while (!philo->env->is_dead)
 	{
-		if (should_thread_terminate(philo))
-			break ;
+//		if (should_thread_terminate(philo))
+//			break ;
+//		if (philo->activity == THINK)
+//			;
+//		if (philo->activity == EAT)
+//			;
+//		if (philo->activity == SLEEP)
+//			;
 		if (thinking(philo, last_meal))
 			break ;
 		if (eating(philo, &num_of_meals, &last_meal))
 			break ;
 		if (sleeping(philo, last_meal))
 			break ;
-		usleep(1000);
+//		usleep(1000);
 	}
 	return (NULL);
 }

@@ -22,7 +22,7 @@ bool    take_fork(t_fork *fork, unsigned int time_out)
 			pthread_mutex_unlock(&fork->mutex);
 			return (true);
 		}
-		usleep(200);
+		usleep(100);
 	}
 	return (false);
 }
@@ -60,17 +60,17 @@ int sleeping_2(t_philo *philo, unsigned long last_meal)
 	sleep_start = get_time();
 	while ((get_time() - sleep_start < philo->env->time_to_eat) && !philo->env->is_dead)
 	{
-//		if (get_time() - sleep_start >= philo->env->time_to_die)
-//		{
-//			print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied sleep\033[0m");
-//			pthread_mutex_lock(&philo->env->dead);
-//			philo->env->is_dead = true;
-//			pthread_mutex_unlock(&philo->env->dead);
-//			return (EXIT_FAILURE);
-//		}
+		if (get_time() - sleep_start >= philo->env->time_to_die)
+		{
+			print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied sleep\033[0m");
+			pthread_mutex_lock(&philo->env->dead);
+			philo->env->is_dead = true;
+			pthread_mutex_unlock(&philo->env->dead);
+			return (EXIT_FAILURE);
+		}
 		if (philo->env->is_dead)
 			return (EXIT_FAILURE);
-		usleep(200);
+		usleep(100);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -78,7 +78,7 @@ int sleeping_2(t_philo *philo, unsigned long last_meal)
 int eating(t_philo *philo, unsigned int *num_of_meals, unsigned long *last_meal)
 {
 	*last_meal = get_time();
-//	print_log(get_time() - philo->env->start_time, philo, "\033[0;32mis eating\033[0m");
+	print_log(get_time() - philo->env->start_time, philo, "\033[0;32mis eating\033[0m");
 	sleeping_2(philo, *last_meal);
 	usleep(philo->env->time_to_eat * 1000);
 	if (philo->env->num_must_eat != 0)
@@ -118,7 +118,7 @@ int sleeping(t_philo *philo, unsigned long last_meal)
 		}
 		if (philo->env->is_dead)
 			return (EXIT_FAILURE);
-		usleep(200);
+		usleep(100);
 	}
 	return (EXIT_SUCCESS);
 }

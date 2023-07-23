@@ -17,12 +17,12 @@
 # include <pthread.h>
 # include <stdbool.h>
 
-typedef enum e_activity
-{
-	THINK,
-	EAT,
-	SLEEP,
-}   t_activity;
+//typedef enum e_activity
+//{
+//	THINK,
+//	EAT,
+//	SLEEP,
+//}   t_activity;
 
 typedef struct s_fork
 {
@@ -50,8 +50,8 @@ typedef struct s_philo
 	unsigned int    id;
 	t_fork       	*r_fork;
     t_fork       	*l_fork;
-	t_activity      activity;
-	unsigned int    activity_start;
+//	t_activity      activity;
+//	unsigned int    activity_start;
 }	t_philo;
 
 //				philo.c
