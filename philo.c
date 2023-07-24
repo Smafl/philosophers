@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:31:39 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/13 14:58:19 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/24 23:55:50 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,27 +33,18 @@ void	*routine(void *argv)
 	unsigned int	num_of_meals;
 
 	philo = argv;
-//	if (philo->id % 2 == 1)
-//		usleep(100);
+	if (philo->id % 2 == 0)
+		usleep(philo->env->time_to_eat * 1000);
 	last_meal = philo->env->start_time;
 	num_of_meals = 0;
 	while (!philo->env->is_dead)
 	{
-//		if (should_thread_terminate(philo))
-//			break ;
-//		if (philo->activity == THINK)
-//			;
-//		if (philo->activity == EAT)
-//			;
-//		if (philo->activity == SLEEP)
-//			;
 		if (thinking(philo, last_meal))
 			break ;
 		if (eating(philo, &num_of_meals, &last_meal))
 			break ;
 		if (sleeping(philo, last_meal))
 			break ;
-//		usleep(1000);
 	}
 	return (NULL);
 }

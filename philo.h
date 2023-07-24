@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:26:23 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/09 19:41:33 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/25 00:12:50 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,30 @@ void	destroy_mutexes(t_philo *philos, pthread_mutex_t *forks);
 void	free_philos(t_philo **philos);
 void	free_all(t_philo **philos, pthread_t *threads, pthread_mutex_t *forks);
 
+/*
+// take one fork
+  - lock mutex
+  - check death (if dead, then unlock mutex)
+  - print
+// take one fork
+  - lock mutex
+  - check death (if dead, then unlock mutex)
+  - print
+// eat 200
+  - check death (if dead, then unlock mutex)
+  - print
+  - while loop  with sleep
+// unlock one fork
+  - unlock fork
+// unlock one fork
+  - unlock fork
+// sleep 200
+  - check death (if dead, then unlock mutex)
+  - print
+  - while loop with sleep
+// think while of smaller intervals of sleep so that u can check death even when u r sleeping 200
+  - check death (if dead, then unlock mutex)
+  - print
+  - while loop with sleep (depends on some variable that you decide)
+*/
 #endif

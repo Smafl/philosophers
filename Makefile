@@ -21,7 +21,7 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 $(NAME): $(OBJ)
-	@cc $(OBJ) $(SAN_LDFLAGS) -o $(NAME)
+	@cc $(OBJ) -o $(NAME)
 	@printf "$(PURPLE)compiled successfully\n$(RESET)"
 
 $(OBJ_DIR)/%.o: %.c $(OBJ_DIR)
