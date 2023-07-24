@@ -81,8 +81,8 @@ void    init_philos(t_philo **philos, t_env *env, t_fork *forks)
 //		printf("ph address %p\n", ph);
 		ph->id = i + 1;
 		ph->env = env;
-		ph->activity = THINK;
-		ph->activity_start = get_time();
+//		ph->activity = THINK;
+//		ph->activity_start = get_time();
 		ph->l_fork = forks + i;
 		ph->r_fork = forks + ((i + 1) % env->num_of_philo);
 		i++;
