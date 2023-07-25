@@ -23,18 +23,18 @@ void    unlock_fork(t_fork *fork)
 	pthread_mutex_unlock(&fork->mutex);
 }
 
-bool    take_fork(t_fork *l_fork,unsigned int time_out)
+bool    take_fork(t_fork *fork,unsigned int time_out)
 {
 	while (get_time() <= time_out)
 	{
-		pthread_mutex_lock(&l_fork->mutex);
-		if (!l_fork->taken)
+		pthread_mutex_lock(&fork->mutex);
+		if (!fork->taken)
 		{
-			l_fork->taken = true;
+			fork->taken = true;
 //			pthread_mutex_unlock(&l_fork->mutex);
 			return (true);
 		}
-		pthread_mutex_unlock(&l_fork->mutex);
+		pthread_mutex_unlock(&fork->mutex);
 		usleep(100);
 	}
 	return (false);

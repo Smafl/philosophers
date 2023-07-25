@@ -16,14 +16,28 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int should_thread_terminate(t_philo *philo)
-{
-	int should_terminate;
+//int should_thread_terminate(t_philo *philo)
+//{
+//	int should_terminate;
+//
+//	pthread_mutex_lock(&philo->env->dead);
+//	should_terminate = philo->env->is_dead;
+//	pthread_mutex_unlock(&philo->env->dead);
+//	return (should_terminate);
+//}
 
-	pthread_mutex_lock(&philo->env->dead);
-	should_terminate = philo->env->is_dead;
-	pthread_mutex_unlock(&philo->env->dead);
-	return (should_terminate);
+void	*lonely_routine(void *argv)
+{
+	t_philo			*philo;
+
+	philo = argv;
+	print_log(get_time() - philo->env->start_time, philo, "\033[0;34mis thinking\033[0m");
+	pthread_mutex_lock(&philo->r_fork->mutex);
+	print_log(get_time() - philo->env->start_time, philo, "has taken a fork");
+	pthread_mutex_unlock(&philo->r_fork->mutex);
+	usleep(philo->env->time_to_die * 1000);
+	print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied\033[0m");
+	return (NULL);
 }
 
 void	*routine(void *argv)

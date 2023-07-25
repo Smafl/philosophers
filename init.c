@@ -81,8 +81,6 @@ void    init_philos(t_philo **philos, t_env *env, t_fork *forks)
 //		printf("ph address %p\n", ph);
 		ph->id = i + 1;
 		ph->env = env;
-//		ph->activity = THINK;
-//		ph->activity_start = get_time();
 		ph->l_fork = forks + i;
 		ph->r_fork = forks + ((i + 1) % env->num_of_philo);
 		i++;
@@ -97,12 +95,18 @@ bool	thread_creation(pthread_t **thread, t_env *env, t_philo *philos)
 	if (*thread == NULL)
 		print_malloc_failed();
 	i = 0;
+	if (philos->env->num_of_philo == 1)
+	{
+		if (pthread_create(*thread, NULL, &lonely_routine, philos))
+			// todo destroy mutex
+			return (false);
+		return (true);
+	}
 	while (i != env->num_of_philo)
 	{
 		if (pthread_create(*thread + i, NULL, &routine, philos + i))
 		{
-			// todo
-			// join already inited threads and mutexes
+			// todo join already inited threads and mutexes
 			return (printf("thread init failed\n"), false);
 		}
 		i++;

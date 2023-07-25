@@ -17,13 +17,6 @@
 # include <pthread.h>
 # include <stdbool.h>
 
-//typedef enum e_activity
-//{
-//	THINK,
-//	EAT,
-//	SLEEP,
-//}   t_activity;
-
 typedef struct s_fork
 {
 	pthread_mutex_t mutex;
@@ -50,12 +43,11 @@ typedef struct s_philo
 	unsigned int    id;
 	t_fork       	*r_fork;
     t_fork       	*l_fork;
-//	t_activity      activity;
-//	unsigned int    activity_start;
 }	t_philo;
 
 //				philo.c
 void			*routine(void *argv);
+void			*lonely_routine(void *argv);
 
 // 				init.c 4
 bool			init_env(char **argv, t_env *env, t_philo **philos, t_fork **forks);
@@ -92,7 +84,7 @@ void	free_all(t_philo **philos, pthread_t *threads, pthread_mutex_t *forks);
   - lock mutex
   - check death (if dead, then unlock mutex)
   - print
-// eat 200
+// eat
   - check death (if dead, then unlock mutex)
   - print
   - while loop  with sleep
@@ -100,11 +92,11 @@ void	free_all(t_philo **philos, pthread_t *threads, pthread_mutex_t *forks);
   - unlock fork
 // unlock one fork
   - unlock fork
-// sleep 200
+// sleep
   - check death (if dead, then unlock mutex)
   - print
   - while loop with sleep
-// think while of smaller intervals of sleep so that u can check death even when u r sleeping 200
+// think while of smaller intervals of sleep so that u can check death even when u r sleeping
   - check death (if dead, then unlock mutex)
   - print
   - while loop with sleep (depends on some variable that you decide)
