@@ -28,12 +28,14 @@ void    unlock_fork(t_fork *fork)
 
 void	print_log(unsigned int time, t_philo *philo, char *str)
 {
+	pthread_mutex_lock(&philo->env->dead);
 	if (!philo->env->is_dead)
 	{
 		pthread_mutex_lock(&philo->env->print);
 		printf("%u %u %s\n", time, philo->id, str);
 		pthread_mutex_unlock(&philo->env->print);
 	}
+	pthread_mutex_unlock(&philo->env->dead);
 }
 
 int check_if_dead(t_philo *philo)
@@ -52,7 +54,11 @@ void	time_to_die(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->env->dead);
 	if (!philo->env->is_dead)
-		print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied\033[0m");
+	{
+		pthread_mutex_lock(&philo->env->print);
+		printf("%lu %u %s\n", get_time() - philo->env->start_time, philo->id, "\033[0;31mdied\033[0m");
+		pthread_mutex_unlock(&philo->env->print);
+	}
 	philo->env->is_dead = true;
 	pthread_mutex_unlock(&philo->env->dead);
 }
