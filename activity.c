@@ -93,11 +93,11 @@ int thinking(t_philo *philo, unsigned long last_meal)
 
 int eating_2(t_philo *philo, unsigned long last_meal)
 {
-	unsigned long	sleep_start;
+	unsigned long	eat_start;
 
 	(void)last_meal;
-	sleep_start = get_time();
-	while (get_time() - sleep_start < philo->env->time_to_eat)
+	eat_start = get_time();
+	while (get_time() - eat_start < philo->env->time_to_eat)
 	{
 		pthread_mutex_lock(&philo->env->dead);
 		if (philo->env->is_dead)
@@ -106,7 +106,7 @@ int eating_2(t_philo *philo, unsigned long last_meal)
 			return (EXIT_FAILURE);
 		}
 		pthread_mutex_unlock(&philo->env->dead);
-		if (get_time() - sleep_start >= philo->env->time_to_die)
+		if (get_time() - eat_start >= philo->env->time_to_die)
 		{
 			print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied\033[0m");
 			pthread_mutex_lock(&philo->env->dead);
@@ -138,9 +138,6 @@ int eating(t_philo *philo, unsigned int *num_of_meals, unsigned long *last_meal)
 	unlock_fork(philo->r_fork);
 	return (EXIT_SUCCESS);
 }
-
-// todo
-// doesn't work case ./philo 4 410 200 200 -- nobody should die
 
 int sleeping(t_philo *philo, unsigned long last_meal)
 {

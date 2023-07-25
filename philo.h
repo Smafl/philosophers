@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:26:23 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/25 00:12:50 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/25 15:46:08 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ typedef struct s_fork
 
 typedef struct s_environment
 {
-	// todo signed int
     unsigned int 	num_of_philo;
     unsigned int 	time_to_die;
     unsigned int 	time_to_eat;
@@ -51,9 +50,9 @@ void			*lonely_routine(void *argv);
 
 // 				init.c 4
 bool			init_env(char **argv, t_env *env, t_philo **philos, t_fork **forks);
-bool    		init_forks(t_fork **forks, unsigned int num_of_philo);
+bool    		init_forks(t_fork **forks, unsigned int num_of_philo, unsigned int *inited);
 void    		init_philos(t_philo **philos, t_env *env, t_fork *forks);
-bool			thread_creation(pthread_t **thread, t_env *env, t_philo *philos);
+bool			thread_creation(pthread_t **threads, t_env *env, t_philo *philos);
 
 //				activity.c
 int 			thinking(t_philo *philo, unsigned long last_meal);
@@ -70,10 +69,9 @@ bool			parse_argv(t_env *env, char **argv);
 bool			ph_atoi(const char *str, unsigned int *result);
 
 //				free.c
-void	join_threads(t_philo *philos, pthread_t *threads);
-void	destroy_mutexes(t_philo *philos, pthread_mutex_t *forks);
-void	free_philos(t_philo **philos);
-void	free_all(t_philo **philos, pthread_t *threads, pthread_mutex_t *forks);
+void	join_threads(pthread_t *threads, unsigned int num_of_philo);
+void	destroy_mutexes(t_philo *philos, t_fork *forks, unsigned int num_of_philo);
+void	free_all(t_philo *philos, pthread_t *threads);
 
 /*
 // take one fork

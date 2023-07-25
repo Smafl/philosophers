@@ -13,18 +13,8 @@
 #include "philo.h"
 #include <stdio.h>
 #include <pthread.h>
-#include <stdlib.h>
 #include <unistd.h>
-
-//int should_thread_terminate(t_philo *philo)
-//{
-//	int should_terminate;
-//
-//	pthread_mutex_lock(&philo->env->dead);
-//	should_terminate = philo->env->is_dead;
-//	pthread_mutex_unlock(&philo->env->dead);
-//	return (should_terminate);
-//}
+#include <stdlib.h>
 
 void	*lonely_routine(void *argv)
 {
@@ -78,11 +68,12 @@ int	main(int argc, char **argv)
 		return (1);
 	if (!thread_creation(&threads, &env, philos))
 	{
-//		free_philos(&philos);
+		destroy_mutexes(philos, forks, env.num_of_philo);
+		free_all(philos, threads);
 		return (1);
 	}
-//	free_all(&philos, threads, forks);
-	join_threads(philos, threads);
-//	destroy_mutexes(philos, forks);
+	join_threads(threads, env.num_of_philo);
+	destroy_mutexes(philos, forks, env.num_of_philo);
+	free_all(philos, threads);
 	return (0);
 }

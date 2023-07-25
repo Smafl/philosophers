@@ -18,6 +18,9 @@
 
 bool	init_env(char **argv, t_env *env, t_philo **philos, t_fork	**forks)
 {
+	unsigned int	inited;
+
+	inited = 0;
 	if (!parse_argv(env, argv))
 	{
 		printf("incorrect input\n");
@@ -32,32 +35,30 @@ bool	init_env(char **argv, t_env *env, t_philo **philos, t_fork	**forks)
 	}
 	if (pthread_mutex_init(&env->dead, NULL))
 	{
+		pthread_mutex_destroy(&env->print);
 		printf("mutex init failed\n");
 		return (false);
 	}
-    if (!init_forks(forks, env->num_of_philo))
+    if (!init_forks(forks, env->num_of_philo, &inited))
 	{
 		printf("mutex init failed\n");
+		destroy_mutexes(*philos, *forks, inited);
 		return (false);
 	}
 	init_philos(philos, env, *forks);
     return (true);
 }
 
-bool    init_forks(t_fork **forks, unsigned int num_of_philo)
+bool    init_forks(t_fork **forks, unsigned int num_of_philo, unsigned int *inited)
 {
-	unsigned int i;
+	unsigned int	i;
 
-	*forks = malloc(sizeof(t_fork) * num_of_philo);
-	if (*forks == NULL)
-		print_malloc_failed();
 	i = 0;
 	while (i != num_of_philo)
 	{
 		if (pthread_mutex_init(&(*forks + i)->mutex, NULL))
 		{
-			// todo
-			// destroy already inited mutexes
+			*inited = i;
 			return (false);
 		}
 		(*forks + i)->taken = false;
@@ -68,8 +69,8 @@ bool    init_forks(t_fork **forks, unsigned int num_of_philo)
 
 void    init_philos(t_philo **philos, t_env *env, t_fork *forks)
 {
-	unsigned int i;
-	t_philo *ph;
+	unsigned int	i;
+	t_philo			*ph;
 
 	*philos = malloc(sizeof(t_philo) * env->num_of_philo);
 	if (*philos == NULL)
@@ -78,7 +79,6 @@ void    init_philos(t_philo **philos, t_env *env, t_fork *forks)
 	while (i != env->num_of_philo)
 	{
 		ph = *philos + i;
-//		printf("ph address %p\n", ph);
 		ph->id = i + 1;
 		ph->env = env;
 		ph->l_fork = forks + i;
@@ -87,26 +87,25 @@ void    init_philos(t_philo **philos, t_env *env, t_fork *forks)
 	}
 }
 
-bool	thread_creation(pthread_t **thread, t_env *env, t_philo *philos)
+bool	thread_creation(pthread_t **threads, t_env *env, t_philo *philos)
 {
 	unsigned int 	i;
 
-	*thread = malloc(sizeof(pthread_t) * env->num_of_philo);
-	if (*thread == NULL)
+	*threads = malloc(sizeof(pthread_t) * env->num_of_philo);
+	if (*threads == NULL)
 		print_malloc_failed();
 	i = 0;
 	if (philos->env->num_of_philo == 1)
 	{
-		if (pthread_create(*thread, NULL, &lonely_routine, philos))
-			// todo destroy mutex
-			return (false);
+		if (pthread_create(*threads, NULL, &lonely_routine, philos))
+			return (printf("thread init failed\n"), false);
 		return (true);
 	}
 	while (i != env->num_of_philo)
 	{
-		if (pthread_create(*thread + i, NULL, &routine, philos + i))
+		if (pthread_create(*threads + i, NULL, &routine, philos + i))
 		{
-			// todo join already inited threads and mutexes
+			join_threads(*threads, i);
 			return (printf("thread init failed\n"), false);
 		}
 		i++;

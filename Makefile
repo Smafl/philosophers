@@ -10,7 +10,7 @@ OBJ_DIR =	obj
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 
 CFLAGS = -Wall -Wextra -Werror
-SAN_LDFLAGS = -L../LeakSanitizer -llsan -lc++ -Wno-gnu-include-next -I ../LeakSanitize
+SAN_LDFLAG = -L../LeakSanitizer -llsan -lc++ -Wno-gnu-include-next -I ../LeakSanitize
 
 PURPLE = \033[0;35m
 RESET = \033[0m
