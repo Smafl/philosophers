@@ -48,3 +48,9 @@ void	free_all(t_philo *philos, pthread_t *threads, t_fork *forks)
 	free(threads);
 	free(philos);
 }
+
+void	print_malloc_failed(void)
+{
+	printf("malloc failed\n");
+	exit(1);
+}

@@ -28,6 +28,20 @@ bool	init_env(char **argv, t_env *env, t_philo **philos, t_fork	**forks)
     }
     env->start_time = get_time();
 	env->is_dead = false;
+	if (!env_mutex_init(env))
+		return (false);
+    if (!init_forks(forks, env->num_of_philo, &inited))
+	{
+		printf("mutex init failed\n");
+		destroy_mutexes(*philos, *forks, inited);
+		return (false);
+	}
+	init_philos(philos, env, *forks);
+    return (true);
+}
+
+bool	env_mutex_init(t_env *env)
+{
 	if (pthread_mutex_init(&env->print, NULL))
 	{
 		printf("mutex init failed\n");
@@ -39,14 +53,7 @@ bool	init_env(char **argv, t_env *env, t_philo **philos, t_fork	**forks)
 		printf("mutex init failed\n");
 		return (false);
 	}
-    if (!init_forks(forks, env->num_of_philo, &inited))
-	{
-		printf("mutex init failed\n");
-		destroy_mutexes(*philos, *forks, inited);
-		return (false);
-	}
-	init_philos(philos, env, *forks);
-    return (true);
+	return (true);
 }
 
 bool    init_forks(t_fork **forks, unsigned int num_of_philo, unsigned int *inited)

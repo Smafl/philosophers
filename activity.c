@@ -16,64 +16,24 @@
 #include <unistd.h>
 #include <stdio.h>
 
-void    unlock_fork(t_fork *fork)
-{
-//	pthread_mutex_lock(&fork->mutex);
-	fork->taken = false;
-	pthread_mutex_unlock(&fork->mutex);
-}
-
-bool    take_fork(t_fork *fork,unsigned int time_out)
-{
-	while (get_time() <= time_out)
-	{
-		pthread_mutex_lock(&fork->mutex);
-		if (!fork->taken)
-		{
-			fork->taken = true;
-//			pthread_mutex_unlock(&l_fork->mutex);
-			return (true);
-		}
-		pthread_mutex_unlock(&fork->mutex);
-		usleep(100);
-	}
-	return (false);
-}
-
 int thinking(t_philo *philo, unsigned long last_meal)
 {
 	print_log(get_time() - philo->env->start_time, philo, "\033[0;34mis thinking\033[0m");
 	if (philo->id % 2 == 0)
 	{
-		pthread_mutex_lock(&philo->env->dead);
-		if (philo->env->is_dead)
-		{
-			pthread_mutex_unlock(&philo->env->dead);
+		if (check_if_dead(philo))
 			return (EXIT_FAILURE);
-		}
-		pthread_mutex_unlock(&philo->env->dead);
 		if (!take_fork(philo->l_fork, last_meal + philo->env->time_to_die))
 		{
-			print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied\033[0m");
-			pthread_mutex_lock(&philo->env->dead);
-			philo->env->is_dead = true;
-			pthread_mutex_unlock(&philo->env->dead);
+			time_to_die(philo);
 			return (EXIT_FAILURE);
 		}
 		print_log(get_time() - philo->env->start_time, philo, "has taken a fork");
-		pthread_mutex_lock(&philo->env->dead);
-		if (philo->env->is_dead)
-		{
-			pthread_mutex_unlock(&philo->env->dead);
+		if (check_if_dead(philo))
 			return (EXIT_FAILURE);
-		}
-		pthread_mutex_unlock(&philo->env->dead);
 		if (!take_fork(philo->r_fork, last_meal + philo->env->time_to_die))
 		{
-			print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied\033[0m");
-			pthread_mutex_lock(&philo->env->dead);
-			philo->env->is_dead = true;
-			pthread_mutex_unlock(&philo->env->dead);
+			time_to_die(philo);
 			unlock_fork(philo->l_fork);
 			return (EXIT_FAILURE);
 		}
@@ -81,22 +41,19 @@ int thinking(t_philo *philo, unsigned long last_meal)
 	}
 	else
 	{
-
+		if (check_if_dead(philo))
+			return (EXIT_FAILURE);
 		if (!take_fork(philo->r_fork, last_meal + philo->env->time_to_die))
 		{
-			print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied\033[0m");
-			pthread_mutex_lock(&philo->env->dead);
-			philo->env->is_dead = true;
-			pthread_mutex_unlock(&philo->env->dead);
+			time_to_die(philo);
 			return (EXIT_FAILURE);
 		}
 		print_log(get_time() - philo->env->start_time, philo, "has taken a fork");
+		if (check_if_dead(philo))
+			return (EXIT_FAILURE);
 		if (!take_fork(philo->l_fork, last_meal + philo->env->time_to_die))
 		{
-			print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied\033[0m");
-			pthread_mutex_lock(&philo->env->dead);
-			philo->env->is_dead = true;
-			pthread_mutex_unlock(&philo->env->dead);
+			time_to_die(philo);
 			unlock_fork(philo->r_fork);
 			return (EXIT_FAILURE);
 		}
@@ -112,19 +69,11 @@ int eating_2(t_philo *philo)
 	eat_start = get_time();
 	while (get_time() - eat_start < philo->env->time_to_eat)
 	{
-		pthread_mutex_lock(&philo->env->dead);
-		if (philo->env->is_dead)
-		{
-			pthread_mutex_unlock(&philo->env->dead);
+		if (check_if_dead(philo))
 			return (EXIT_FAILURE);
-		}
-		pthread_mutex_unlock(&philo->env->dead);
 		if (get_time() - eat_start >= philo->env->time_to_die)
 		{
-			print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied\033[0m");
-			pthread_mutex_lock(&philo->env->dead);
-			philo->env->is_dead = true;
-			pthread_mutex_unlock(&philo->env->dead);
+			time_to_die(philo);
 			return (EXIT_FAILURE);
 		}
 		usleep(100);
@@ -160,19 +109,11 @@ int sleeping(t_philo *philo, unsigned long last_meal)
 	print_log(get_time() - philo->env->start_time, philo, "\033[30;1mis sleeping\033[0m");
 	while (get_time() - sleep_start < philo->env->time_to_sleep)
 	{
-		pthread_mutex_lock(&philo->env->dead);
-		if (philo->env->is_dead)
-		{
-			pthread_mutex_unlock(&philo->env->dead);
+		if (check_if_dead(philo))
 			return (EXIT_FAILURE);
-		}
-		pthread_mutex_unlock(&philo->env->dead);
 		if (get_time() - last_meal >= philo->env->time_to_die)
 		{
-			print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied\033[0m");
-			pthread_mutex_lock(&philo->env->dead);
-			philo->env->is_dead = true;
-			pthread_mutex_unlock(&philo->env->dead);
+			time_to_die(philo);
 			return (EXIT_FAILURE);
 		}
 		usleep(100);

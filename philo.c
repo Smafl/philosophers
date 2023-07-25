@@ -14,20 +14,29 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
-#include <stdlib.h>
+#include <sys/time.h>
 
-void	*lonely_routine(void *argv)
+int	main(int argc, char **argv)
 {
-	t_philo			*philo;
+    t_env			env;
+	t_fork          *forks;
+	t_philo			*philos;
+	pthread_t		*threads;
 
-	philo = argv;
-	print_log(get_time() - philo->env->start_time, philo, "\033[0;34mis thinking\033[0m");
-	pthread_mutex_lock(&philo->r_fork->mutex);
-	print_log(get_time() - philo->env->start_time, philo, "has taken a fork");
-	pthread_mutex_unlock(&philo->r_fork->mutex);
-	usleep(philo->env->time_to_die * 1000);
-	print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied\033[0m");
-	return (NULL);
+    if (argc < 5 || argc > 6)
+        return (printf("incorrect input\n"), 1);
+    if (!init_env(argv, &env, &philos, &forks))
+		return (1);
+	if (!thread_creation(&threads, &env, philos))
+	{
+		destroy_mutexes(philos, forks, env.num_of_philo);
+		free_all(philos, threads, forks);
+		return (1);
+	}
+	join_threads(threads, env.num_of_philo);
+	destroy_mutexes(philos, forks, env.num_of_philo);
+	free_all(philos, threads, forks);
+	return (0);
 }
 
 void	*routine(void *argv)
@@ -53,27 +62,24 @@ void	*routine(void *argv)
 	return (NULL);
 }
 
-// pthread_create:
-// thread, attributes of the thread, function, arguments for function
-int	main(int argc, char **argv)
+void	*lonely_routine(void *argv)
 {
-    t_env			env;
-	t_fork          *forks;
-	t_philo			*philos;
-	pthread_t		*threads;
+	t_philo			*philo;
 
-    if (argc < 5 || argc > 6)
-        return (printf("incorrect input\n"), 1);
-    if (!init_env(argv, &env, &philos, &forks))
-		return (1);
-	if (!thread_creation(&threads, &env, philos))
-	{
-		destroy_mutexes(philos, forks, env.num_of_philo);
-		free_all(philos, threads, forks);
-		return (1);
-	}
-	join_threads(threads, env.num_of_philo);
-	destroy_mutexes(philos, forks, env.num_of_philo);
-	free_all(philos, threads, forks);
-	return (0);
+	philo = argv;
+	print_log(get_time() - philo->env->start_time, philo, "\033[0;34mis thinking\033[0m");
+	pthread_mutex_lock(&philo->r_fork->mutex);
+	print_log(get_time() - philo->env->start_time, philo, "has taken a fork");
+	pthread_mutex_unlock(&philo->r_fork->mutex);
+	usleep(philo->env->time_to_die * 1000);
+	print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied\033[0m");
+	return (NULL);
+}
+
+unsigned int	get_time(void)
+{
+	struct timeval	time_now;
+
+	gettimeofday(&time_now, NULL);
+	return (time_now.tv_sec * 1000 + time_now.tv_usec / 1000);
 }
