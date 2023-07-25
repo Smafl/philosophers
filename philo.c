@@ -69,11 +69,11 @@ int	main(int argc, char **argv)
 	if (!thread_creation(&threads, &env, philos))
 	{
 		destroy_mutexes(philos, forks, env.num_of_philo);
-		free_all(philos, threads);
+		free_all(philos, threads, forks);
 		return (1);
 	}
 	join_threads(threads, env.num_of_philo);
 	destroy_mutexes(philos, forks, env.num_of_philo);
-	free_all(philos, threads);
+	free_all(philos, threads, forks);
 	return (0);
 }

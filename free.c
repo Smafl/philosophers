@@ -42,8 +42,9 @@ void	destroy_mutexes(t_philo *philos, t_fork *forks, unsigned int num_of_philo)
 	pthread_mutex_destroy(&philos->env->dead);
 }
 
-void	free_all(t_philo *philos, pthread_t *threads)
+void	free_all(t_philo *philos, pthread_t *threads, t_fork *forks)
 {
+	free(forks);
 	free(threads);
 	free(philos);
 }

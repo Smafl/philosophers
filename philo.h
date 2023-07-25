@@ -69,9 +69,9 @@ bool			parse_argv(t_env *env, char **argv);
 bool			ph_atoi(const char *str, unsigned int *result);
 
 //				free.c
-void	join_threads(pthread_t *threads, unsigned int num_of_philo);
-void	destroy_mutexes(t_philo *philos, t_fork *forks, unsigned int num_of_philo);
-void	free_all(t_philo *philos, pthread_t *threads);
+void			join_threads(pthread_t *threads, unsigned int num_of_philo);
+void			destroy_mutexes(t_philo *philos, t_fork *forks, unsigned int num_of_philo);
+void			free_all(t_philo *philos, pthread_t *threads, t_fork *forks);
 
 /*
 // take one fork

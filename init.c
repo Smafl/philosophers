@@ -53,6 +53,9 @@ bool    init_forks(t_fork **forks, unsigned int num_of_philo, unsigned int *init
 {
 	unsigned int	i;
 
+	*forks = malloc(sizeof(t_fork) * num_of_philo);
+	if (*forks == NULL)
+		print_malloc_failed();
 	i = 0;
 	while (i != num_of_philo)
 	{
