@@ -3,34 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekulichk <ekulichk@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:26:23 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/25 15:46:08 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/26 03:30:32 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-#ifndef PHILO_PHILO_H
-#define PHILO_PHILO_H
+#ifndef PHILO_H
+# define PHILO_H
 
 # include <pthread.h>
 # include <stdbool.h>
 
 typedef struct s_fork
 {
-	pthread_mutex_t mutex;
-	bool            taken;
-}   t_fork;
+	pthread_mutex_t	mutex;
+	bool			taken;
+}	t_fork;
 
 typedef struct s_environment
 {
-    unsigned int 	num_of_philo;
-    unsigned int 	time_to_die;
-    unsigned int 	time_to_eat;
-    unsigned int 	time_to_sleep;
-    unsigned int 	num_must_eat;
-    unsigned long	start_time;
+	unsigned int	num_of_philo;
+	unsigned int	time_to_die;
+	unsigned int	time_to_eat;
+	unsigned int	time_to_sleep;
+	unsigned int	num_must_eat;
+	unsigned long	start_time;
 	bool			is_dead;
 	pthread_mutex_t	print;
 	pthread_mutex_t	dead;
@@ -39,9 +38,9 @@ typedef struct s_environment
 typedef struct s_philo
 {
 	t_env			*env;
-	unsigned int    id;
-	t_fork       	*r_fork;
-    t_fork       	*l_fork;
+	unsigned int	id;
+	t_fork			*r_fork;
+	t_fork			*l_fork;
 }	t_philo;
 
 //				philo.c
@@ -51,22 +50,30 @@ void			*lonely_routine(void *argv);
 unsigned int	get_time(void);
 
 // 				init.c 4
-bool			init_env(char **argv, t_env *env, t_philo **philos, t_fork **forks);
+bool			init_env(
+					char **argv, t_env *env, t_philo **philos, t_fork **forks);
 bool			env_mutex_init(t_env *env);
-bool    		init_forks(t_fork **forks, unsigned int num_of_philo, unsigned int *inited);
-void    		init_philos(t_philo **philos, t_env *env, t_fork *forks);
-bool			thread_creation(pthread_t **threads, t_env *env, t_philo *philos);
+bool			init_forks(
+					t_fork **forks,
+					unsigned int num_of_philo, unsigned int *inited);
+void			init_philos(t_philo **philos, t_env *env, t_fork *forks);
+bool			thread_creation(
+					pthread_t **threads, t_env *env, t_philo *philos);
 
 //				activity.c
-int 			thinking(t_philo *philo, unsigned long last_meal);
-int 			eating(t_philo *philo, unsigned int *num_of_meals, unsigned long *last_meal);
+int				thinking(t_philo *philo, unsigned long last_meal);
+int				eating(
+					t_philo *philo,
+					unsigned int *num_of_meals, unsigned long *last_meal);
 int				sleeping(t_philo *philo, unsigned long last_meal);
+int				left_hander(t_philo *philo, unsigned long last_meal);
+int				right_hander(t_philo *philo, unsigned long last_meal);
 
 //				utils.c
-bool		    take_fork(t_fork *fork,unsigned int time_out);
-void		    unlock_fork(t_fork *fork);
+bool			take_fork(t_fork *fork, unsigned int time_out);
+void			unlock_fork(t_fork *fork);
 void			print_log(unsigned int time, t_philo *philo, char *str);
-int 			check_if_dead(t_philo *philo);
+int				check_if_dead(t_philo *philo);
 void			time_to_die(t_philo *philo);
 
 // 				parse_input.c
@@ -75,7 +82,8 @@ bool			ph_atoi(const char *str, unsigned int *result);
 
 //				free.c
 void			join_threads(pthread_t *threads, unsigned int num_of_philo);
-void			destroy_mutexes(t_philo *philos, t_fork *forks, unsigned int num_of_philo);
+void			destroy_mutexes(
+					t_philo *philos, t_fork *forks, unsigned int num_of_philo);
 void			free_all(t_philo *philos, pthread_t *threads, t_fork *forks);
 void			print_malloc_failed(void);
 
@@ -100,7 +108,8 @@ void			print_malloc_failed(void);
   - check death (if dead, then unlock mutex)
   - print
   - while loop with sleep
-// think while of smaller intervals of sleep so that u can check death even when u r sleeping
+// think while of smaller intervals 
+of sleep so that u can check death even when u r sleeping
   - check death (if dead, then unlock mutex)
   - print
   - while loop with sleep (depends on some variable that you decide)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers.c                                     :+:      :+:    :+:   */
+/*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:31:39 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/24 23:55:50 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/26 03:37:54 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@
 
 int	main(int argc, char **argv)
 {
-    t_env			env;
-	t_fork          *forks;
+	t_env			env;
+	t_fork			*forks;
 	t_philo			*philos;
 	pthread_t		*threads;
 
-    if (argc < 5 || argc > 6)
-        return (printf("incorrect input\n"), 1);
-    if (!init_env(argv, &env, &philos, &forks))
+	if (argc < 5 || argc > 6)
+		return (printf("incorrect input\n"), 1);
+	if (!init_env(argv, &env, &philos, &forks))
 		return (1);
 	if (!thread_creation(&threads, &env, philos))
 	{
@@ -47,7 +47,7 @@ void	*routine(void *argv)
 
 	philo = argv;
 	if (philo->id % 2 == 0)
-		usleep(philo->env->time_to_eat * 1000);
+		usleep(philo->env->time_to_eat / 2 * 1000);
 	last_meal = philo->env->start_time;
 	num_of_meals = 0;
 	while (!philo->env->is_dead)
@@ -67,12 +67,14 @@ void	*lonely_routine(void *argv)
 	t_philo			*philo;
 
 	philo = argv;
-	print_log(get_time() - philo->env->start_time, philo, "\033[0;34mis thinking\033[0m");
+	print_log(get_time() - philo->env->start_time,
+		philo, "\033[0;34mis thinking\033[0m");
 	pthread_mutex_lock(&philo->r_fork->mutex);
 	print_log(get_time() - philo->env->start_time, philo, "has taken a fork");
 	pthread_mutex_unlock(&philo->r_fork->mutex);
 	usleep(philo->env->time_to_die * 1000);
-	print_log(get_time() - philo->env->start_time, philo, "\033[0;31mdied\033[0m");
+	print_log(get_time() - philo->env->start_time,
+		philo, "\033[0;31mdied\033[0m");
 	return (NULL);
 }
 

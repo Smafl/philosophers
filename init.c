@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 16:22:04 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/07 17:20:17 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/26 03:32:36 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,19 @@ bool	init_env(char **argv, t_env *env, t_philo **philos, t_fork	**forks)
 	{
 		printf("incorrect input\n");
 		return (false);
-    }
-    env->start_time = get_time();
+	}
+	env->start_time = get_time();
 	env->is_dead = false;
 	if (!env_mutex_init(env))
 		return (false);
-    if (!init_forks(forks, env->num_of_philo, &inited))
+	if (!init_forks(forks, env->num_of_philo, &inited))
 	{
 		printf("mutex init failed\n");
 		destroy_mutexes(*philos, *forks, inited);
 		return (false);
 	}
 	init_philos(philos, env, *forks);
-    return (true);
+	return (true);
 }
 
 bool	env_mutex_init(t_env *env)
@@ -56,7 +56,8 @@ bool	env_mutex_init(t_env *env)
 	return (true);
 }
 
-bool    init_forks(t_fork **forks, unsigned int num_of_philo, unsigned int *inited)
+bool	init_forks(
+	t_fork **forks, unsigned int num_of_philo, unsigned int *inited)
 {
 	unsigned int	i;
 
@@ -77,7 +78,7 @@ bool    init_forks(t_fork **forks, unsigned int num_of_philo, unsigned int *init
 	return (true);
 }
 
-void    init_philos(t_philo **philos, t_env *env, t_fork *forks)
+void	init_philos(t_philo **philos, t_env *env, t_fork *forks)
 {
 	unsigned int	i;
 	t_philo			*ph;
@@ -99,7 +100,7 @@ void    init_philos(t_philo **philos, t_env *env, t_fork *forks)
 
 bool	thread_creation(pthread_t **threads, t_env *env, t_philo *philos)
 {
-	unsigned int 	i;
+	unsigned int	i;
 
 	*threads = malloc(sizeof(pthread_t) * env->num_of_philo);
 	if (*threads == NULL)

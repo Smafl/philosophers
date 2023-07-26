@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekulichk <ekulichk@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 20:24:21 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/25 17:48:16 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/26 03:31:31 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "philo.h"
 #include <pthread.h>
@@ -18,7 +17,7 @@
 
 void	join_threads(pthread_t *threads, unsigned int num_of_philo)
 {
-	unsigned int i;
+	unsigned int	i;
 
 	i = 0;
 	while (i != num_of_philo)
@@ -28,9 +27,10 @@ void	join_threads(pthread_t *threads, unsigned int num_of_philo)
 	}
 }
 
-void	destroy_mutexes(t_philo *philos, t_fork *forks, unsigned int num_of_philo)
+void	destroy_mutexes(
+	t_philo *philos, t_fork *forks, unsigned int num_of_philo)
 {
-	unsigned int i;
+	unsigned int	i;
 
 	i = 0;
 	while (i != num_of_philo)
