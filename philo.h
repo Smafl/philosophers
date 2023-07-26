@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:26:23 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/26 15:14:11 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/26 15:39:52 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,6 @@ int				eating(
 					t_philo *philo,
 					unsigned int *num_of_meals, unsigned long *last_meal);
 int				sleeping(t_philo *philo, unsigned long last_meal);
-int				left_hander(t_philo *philo, unsigned long last_meal);
-int				right_hander(t_philo *philo, unsigned long last_meal);
 
 //				utils.c
 bool			take_fork(t_fork *fork, unsigned int time_out);
@@ -88,31 +86,4 @@ void			destroy_mutexes(
 					t_philo *philos, t_fork *forks, unsigned int num_of_philo);
 void			free_all(t_philo *philos, pthread_t *threads, t_fork *forks);
 
-/*
-// take one fork
-  - lock mutex
-  - check death (if dead, then unlock mutex)
-  - print
-// take one fork
-  - lock mutex
-  - check death (if dead, then unlock mutex)
-  - print
-// eat
-  - check death (if dead, then unlock mutex)
-  - print
-  - while loop  with sleep
-// unlock one fork
-  - unlock fork
-// unlock one fork
-  - unlock fork
-// sleep
-  - check death (if dead, then unlock mutex)
-  - print
-  - while loop with sleep
-// think while of smaller intervals 
-of sleep so that u can check death even when u r sleeping
-  - check death (if dead, then unlock mutex)
-  - print
-  - while loop with sleep (depends on some variable that you decide)
-*/
 #endif
