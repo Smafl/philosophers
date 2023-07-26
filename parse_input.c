@@ -13,6 +13,8 @@
 #include "philo.h"
 #include <stdbool.h>
 #include <limits.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 bool	parse_argv(t_env *env, char **argv)
 {
@@ -65,4 +67,10 @@ bool	ph_atoi(const char *str, unsigned int *result)
 		return (false);
 	*result = temp_res;
 	return (true);
+}
+
+void	print_malloc_failed(void)
+{
+	printf("malloc failed\n");
+	exit(1);
 }

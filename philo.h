@@ -49,7 +49,7 @@ void			*routine(void *argv);
 void			*lonely_routine(void *argv);
 unsigned int	get_time(void);
 
-// 				init.c 4
+// 				init.c
 bool			init_env(
 					char **argv, t_env *env, t_philo **philos, t_fork **forks);
 bool			env_mutex_init(t_env *env);
@@ -79,13 +79,13 @@ void			time_to_die(t_philo *philo);
 // 				parse_input.c
 bool			parse_argv(t_env *env, char **argv);
 bool			ph_atoi(const char *str, unsigned int *result);
+void			print_malloc_failed(void);
 
 //				free.c
 void			join_threads(pthread_t *threads, unsigned int num_of_philo);
 void			destroy_mutexes(
 					t_philo *philos, t_fork *forks, unsigned int num_of_philo);
 void			free_all(t_philo *philos, pthread_t *threads, t_fork *forks);
-void			print_malloc_failed(void);
 
 /*
 // take one fork

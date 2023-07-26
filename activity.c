@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 23:26:57 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/26 03:30:58 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/26 03:48:27 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,25 +45,18 @@ int	eating(t_philo *philo, unsigned int *num_of_meals, unsigned long *last_meal)
 		if (check_if_dead(philo))
 			return (EXIT_FAILURE);
 		if (get_time() - eat_start >= philo->env->time_to_die)
-		{
-			time_to_die(philo);
-			return (EXIT_FAILURE);
-		}
+			return (time_to_die(philo), EXIT_FAILURE);
 		usleep(100);
 	}
 	if (philo->env->num_must_eat != 0)
 	{
 		*num_of_meals += 1;
 		if (*num_of_meals == philo->env->num_must_eat)
-		{
-			unlock_fork(philo->l_fork);
-			unlock_fork(philo->r_fork);
-			return (EXIT_FAILURE);
-		}
+			return (unlock_fork(philo->l_fork),
+				unlock_fork(philo->r_fork), EXIT_FAILURE);
 	}
-	unlock_fork(philo->l_fork);
-	unlock_fork(philo->r_fork);
-	return (EXIT_SUCCESS);
+	return (unlock_fork(philo->l_fork),
+		unlock_fork(philo->r_fork), EXIT_FAILURE);
 }
 
 int	sleeping(t_philo *philo, unsigned long last_meal)
