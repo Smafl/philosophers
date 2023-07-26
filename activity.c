@@ -56,7 +56,7 @@ int	eating(t_philo *philo, unsigned int *num_of_meals, unsigned long *last_meal)
 				unlock_fork(philo->r_fork), EXIT_FAILURE);
 	}
 	return (unlock_fork(philo->l_fork),
-		unlock_fork(philo->r_fork), EXIT_FAILURE);
+		unlock_fork(philo->r_fork), EXIT_SUCCESS);
 }
 
 int	sleeping(t_philo *philo, unsigned long last_meal)
