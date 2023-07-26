@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 16:22:04 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/26 03:32:36 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/26 15:14:42 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,14 @@ bool	init_env(char **argv, t_env *env, t_philo **philos, t_fork	**forks)
 	unsigned int	inited;
 
 	inited = 0;
+	env->stop_sim = false;
 	if (!parse_argv(env, argv))
 	{
 		printf("incorrect input\n");
 		return (false);
 	}
+	if (env->stop_sim)
+		exit(0);
 	env->start_time = get_time();
 	env->is_dead = false;
 	if (!env_mutex_init(env))

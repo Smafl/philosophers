@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 23:26:57 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/26 03:48:27 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/26 15:00:47 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,18 @@ int	thinking(t_philo *philo, unsigned long last_meal)
 {
 	print_log(get_time() - philo->env->start_time,
 		philo, "\033[0;34mis thinking\033[0m");
-	if (philo->id % 2 == 0)
-	{
-		if (left_hander(philo, last_meal))
-			return (EXIT_FAILURE);
-	}
-	else
-	{
-		if (right_hander(philo, last_meal))
-			return (EXIT_FAILURE);
-	}
+	if (left_hander(philo, last_meal))
+		return (EXIT_FAILURE);
+	// if (philo->id % 2 == 0)
+	// {
+	// 	if (left_hander(philo, last_meal))
+	// 		return (EXIT_FAILURE);
+	// }
+	// else
+	// {
+	// 	if (right_hander(philo, last_meal))
+	// 		return (EXIT_FAILURE);
+	// }
 	return (EXIT_SUCCESS);
 }
 

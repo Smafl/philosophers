@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:26:23 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/26 03:30:32 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/26 15:14:11 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,16 @@ typedef struct s_fork
 
 typedef struct s_environment
 {
-	unsigned int	num_of_philo;
-	unsigned int	time_to_die;
-	unsigned int	time_to_eat;
-	unsigned int	time_to_sleep;
-	unsigned int	num_must_eat;
-	unsigned long	start_time;
-	bool			is_dead;
-	pthread_mutex_t	print;
-	pthread_mutex_t	dead;
+	const unsigned int	num_of_philo;
+	const unsigned int	time_to_die;
+	const unsigned int	time_to_eat;
+	const unsigned int	time_to_sleep;
+	const unsigned int	num_must_eat;
+	unsigned long		start_time;
+	bool				stop_sim;
+	bool				is_dead;
+	pthread_mutex_t		print;
+	pthread_mutex_t		dead;
 }	t_env;
 
 typedef struct s_philo
@@ -78,7 +79,7 @@ void			time_to_die(t_philo *philo);
 
 // 				parse_input.c
 bool			parse_argv(t_env *env, char **argv);
-bool			ph_atoi(const char *str, unsigned int *result);
+bool			ph_atoi(const char *str, const unsigned int *result);
 void			print_malloc_failed(void);
 
 //				free.c

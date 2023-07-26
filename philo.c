@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:31:39 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/07/26 03:37:54 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/07/26 14:50:16 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	*routine(void *argv)
 		usleep(philo->env->time_to_eat / 2 * 1000);
 	last_meal = philo->env->start_time;
 	num_of_meals = 0;
-	while (!philo->env->is_dead)
+	while (!check_if_dead(philo))
 	{
 		if (thinking(philo, last_meal))
 			break ;
